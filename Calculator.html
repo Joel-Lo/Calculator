@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Calculator</title>
+    <style>
+        body {
+            font-family: monospace;
+            background: #1a1a1a;
+            color: #d0ffd0;
+            padding: 20px;
+        }
+        .title {
+            color: #00ff88;
+            font-weight: bold;
+            border: 2px solid #00ff88;
+            border-radius: 10px;
+            padding: 8px;
+            margin-bottom: 12px;
+            text-align: center;
+            font-size: 24px;
+            background: #222;
+        }
+        .note {
+            color: #8be9fd;
+            margin-bottom: 20px;
+        }
+        .input-label {
+            color: #ffb86c;
+        }
+        .result, .error {
+            display: block;
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .result {
+            color: #8be9fd;
+        }
+        .error {
+            color: #ff5555;
+        }
+        .divider {
+            color: #00ff88;
+        }
+        .calc-input {
+            background: #282a36;
+            color: #f8f8f2;
+            border: 1px solid #444;
+            border-radius: 4px;
+            padding: 4px;
+            font-size: 16px;
+        }
+        button {
+            background: #50fa7b;
+            color: #282a36;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 16px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 12px;
+        }
+        button:hover {
+            background: #18c968;
+        }
+    </style>
+</head>
+<body>
+    <div class="title">
+        ╔════════════════════════════════════════════╗<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;CALCULATOR<br>
+        ╚════════════════════════════════════════════╝
+    </div>
+    <div class="note">
+        Note:<br>
+        1. Do not put any operators in your numbers.<br>
+        2. <span style="color:#bd93f9; font-weight:bold;">Operator: + for add, - for subtract, * for multiply, / for divide, ^ for power</span><br>
+        3. Leave the 2nd operator and number blank for two-number operations.<br><br>
+    </div>
+    <form id="calcForm" autocomplete="off" onsubmit="return calculate();">
+        <label class="input-label">Enter first number:</label>
+        <input type="text" class="calc-input" id="num1"><br><br>
+
+        <label class="input-label">Enter operator:</label>
+        <input type="text" class="calc-input" id="op1" maxlength="1"><br><br>
+
+        <label class="input-label">Enter second number:</label>
+        <input type="text" class="calc-input" id="num2"><br><br>
+
+        <label class="input-label">Enter operator (optional):</label>
+        <input type="text" class="calc-input" id="op2" maxlength="1"><br><br>
+
+        <label class="input-label">Enter third number (optional):</label>
+        <input type="text" class="calc-input" id="num3"><br><br>
+
+        <button type="submit">Calculate</button>
+    </form>
+    <div class="divider">────────────────────────────────────────────────────────────</div>
+    <span class="result" id="result"></span>
+    <span class="error" id="error"></span>
+
+    <script>
+        function calculate() {
+            const num1 = document.getElementById('num1').value.trim();
+            const op1 = document.getElementById('op1').value.trim();
+            const num2 = document.getElementById('num2').value.trim();
+            const op2 = document.getElementById('op2').value.trim();
+            const num3 = document.getElementById('num3').value.trim();
+            const resultDiv = document.getElementById('result');
+            const errorDiv = document.getElementById('error');
+            resultDiv.textContent = '';
+            errorDiv.textContent = '';
+
+            // Check numbers
+            let n1 = parseInt(num1);
+            let n2 = parseInt(num2);
+            let n3 = num3 ? parseInt(num3) : null;
+
+            if (isNaN(n1) || isNaN(n2) || (num3 && isNaN(n3))) {
+                errorDiv.textContent = 'SyntaxError: invalid syntax';
+                return false;
+            }
+
+            function showZeroDivision() {
+                errorDiv.textContent = 'ZeroDivisionError: division by zero';
+            }
+
+            // Two-number operation
+            if (!op2) {
+                let expr, res;
+                switch(op1) {
+                    case '+':
+                        expr = `${n1} + ${n2}`;
+                        res = n1 + n2;
+                        break;
+                    case '-':
+                        expr = `${n1} - ${n2}`;
+                        res = n1 - n2;
+                        break;
+                    case '*':
+                        expr = `${n1} × ${n2}`;
+                        res = n1 * n2;
+                        break;
+                    case '/':
+                        expr = `${n1} ÷ ${n2}`;
+                        if(n2 === 0) return showZeroDivision(), false;
+                        res = n1 / n2;
+                        break;
+                    case '^':
+                        expr = `${n1} ^ ${n2}`;
+                        res = Math.pow(n1, n2);
+                        break;
+                    default:
+                        errorDiv.textContent = 'SyntaxError: invalid syntax';
+                        return false;
+                }
+                resultDiv.textContent = `${expr} = ${res}`;
+                return false;
+            }
+
+            // Three-number operation
+            if (op2 && num3==='') {
+                errorDiv.textContent = 'SyntaxError: invalid syntax';
+                return false;
+            }
+
+            let expr, res;
+            try {
+                switch(op1) {
+                    case '+':
+                        switch(op2) {
+                            case '+':
+                                expr = `${n1} + ${n2} + ${n3}`;
+                                res = n1 + n2 + n3; break;
+                            case '-':
+                                expr = `${n1} + ${n2} - ${n3}`;
+                                res = n1 + n2 - n3; break;
+                            case '*':
+                                expr = `${n1} + ${n2} × ${n3}`;
+                                res = n1 + n2 * n3; break;
+                            case '/':
+                                expr = `${n1} + ${n2} ÷ ${n3}`;
+                                if(n3 === 0) return showZeroDivision(), false;
+                                res = n1 + n2 / n3; break;
+                            case '^':
+                                expr = `${n1} + ${n2} ^ ${n3}`;
+                                res = n1 + Math.pow(n2, n3); break;
+                            default: errorDiv.textContent = 'SyntaxError: invalid syntax'; return false;
+                        }
+                        break;
+                    case '-':
+                        switch(op2) {
+                            case '+':
+                                expr = `${n1} - ${n2} + ${n3}`;
+                                res = n1 - n2 + n3; break;
+                            case '-':
+                                expr = `${n1} - ${n2} - ${n3}`;
+                                res = n1 - n2 - n3; break;
+                            case '*':
+                                expr = `${n1} - ${n2} × ${n3}`;
+                                res = n1 - n2 * n3; break;
+                            case '/':
+                                expr = `${n1} - ${n2} ÷ ${n3}`;
+                                if(n3 === 0) return showZeroDivision(), false;
+                                res = n1 - n2 / n3; break;
+                            case '^':
+                                expr = `${n1} - ${n2} ^ ${n3}`;
+                                res = n1 - Math.pow(n2, n3); break;
+                            default: errorDiv.textContent = 'SyntaxError: invalid syntax'; return false;
+                        }
+                        break;
+                    case '*':
+                        switch(op2) {
+                            case '+':
+                                expr = `${n1} × ${n2} + ${n3}`;
+                                res = n1 * n2 + n3; break;
+                            case '-':
+                                expr = `${n1} × ${n2} - ${n3}`;
+                                res = n1 * n2 - n3; break;
+                            case '*':
+                                expr = `${n1} × ${n2} × ${n3}`;
+                                res = n1 * n2 * n3; break;
+                            case '/':
+                                expr = `${n1} × ${n2} ÷ ${n3}`;
+                                if(n3 === 0) return showZeroDivision(), false;
+                                res = n1 * n2 / n3; break;
+                            case '^':
+                                expr = `${n1} × ${n2} ^ ${n3}`;
+                                res = n1 * Math.pow(n2, n3); break;
+                            default: errorDiv.textContent = 'SyntaxError: invalid syntax'; return false;
+                        }
+                        break;
+                    case '/':
+                        switch(op2) {
+                            case '+':
+                                expr = `${n1} ÷ ${n2} + ${n3}`;
+                                if(n2 === 0) return showZeroDivision(), false;
+                                res = n1 / n2 + n3; break;
+                            case '-':
+                                expr = `${n1} ÷ ${n2} - ${n3}`;
+                                if(n2 === 0) return showZeroDivision(), false;
+                                res = n1 / n2 - n3; break;
+                            case '*':
+                                expr = `${n1} ÷ ${n2} × ${n3}`;
+                                if(n2 === 0) return showZeroDivision(), false;
+                                res = n1 / n2 * n3; break;
+                            case '/':
+                                expr = `${n1} ÷ ${n2} ÷ ${n3}`;
+                                if(n2 === 0 || n3 === 0) return showZeroDivision(), false;
+                                res = n1 / n2 / n3; break;
+                            case '^':
+                                expr = `${n1} ÷ ${n2} ^ ${n3}`;
+                                if(n2 === 0) return showZeroDivision(), false;
+                                res = n1 / Math.pow(n2, n3); break;
+                            default: errorDiv.textContent = 'SyntaxError: invalid syntax'; return false;
+                        }
+                        break;
+                    case '^':
+                        switch(op2) {
+                            case '+':
+                                expr = `${n1} ^ ${n2} + ${n3}`;
+                                res = Math.pow(n1, n2) + n3; break;
+                            case '-':
+                                expr = `${n1} ^ ${n2} - ${n3}`;
+                                res = Math.pow(n1, n2) - n3; break;
+                            case '*':
+                                expr = `${n1} ^ ${n2} × ${n3}`;
+                                res = Math.pow(n1, n2) * n3; break;
+                            case '/':
+                                expr = `${n1} ^ ${n2} ÷ ${n3}`;
+                                if(n3 === 0) return showZeroDivision(), false;
+                                res = Math.pow(n1, n2) / n3; break;
+                            case '^':
+                                expr = `${n1} ^ ${n2} ^ ${n3}`;
+                                res = Math.pow(n1, Math.pow(n2, n3)); break;
+                            default: errorDiv.textContent = 'SyntaxError: invalid syntax'; return false;
+                        }
+                        break;
+                    default:
+                        errorDiv.textContent = 'SyntaxError: invalid syntax';
+                        return false;
+                }
+            } catch(e) {
+                errorDiv.textContent = 'SyntaxError: invalid syntax';
+                return false;
+            }
+            resultDiv.textContent = `${expr} = ${res}`;
+            return false; // prevent form submit
+        }
+    </script>
+</body>
+</html>
