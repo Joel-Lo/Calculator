@@ -6,45 +6,60 @@
     <style>
         body {
             font-family: monospace;
-            background: #1a1a1a;
+            background: #ff57ca;
             color: #d0ffd0;
             padding: 20px;
+            text-align: center;
+            text-align: center;
+            place-items:center;
+            align-items:center;
         }
         .title {
-            color: #00ff88;
+            color: #ff0000;
             font-weight: bold;
-            border: 2px solid #00ff88;
+            /* border: 2px solid #7c0880; */
             border-radius: 10px;
             padding: 8px;
             margin-bottom: 12px;
             text-align: center;
             font-size: 24px;
-            background: #222;
+            background: #ff57ca;
+        }
+        .form{
+            color: #05f057;
+            font-weight: bold;
+            border: 2px solid #7c0880;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 12px;
+            text-align: center;
+            font-size: 24px;
+            background: #ff57ca;
+            width: 580px;
+
         }
         .note {
-            color: #8be9fd;
+            color: #2f00ff;
             margin-bottom: 20px;
+            font-size: 18px;
         }
         .input-label {
-            color: #ffb86c;
+            color: #ff0095;
         }
         .result, .error {
             display: block;
             margin-top: 20px;
-            font-size: 18px;
+            font-size:28px;
             font-weight: bold;
         }
         .result {
-            color: #8be9fd;
+            color: #050567;
         }
         .error {
-            color: #ff5555;
-        }
-        .divider {
-            color: #00ff88;
+            color: #f51818;
         }
         .calc-input {
-            background: #282a36;
+            background:#ff1fb8 ;
             color: #f8f8f2;
             border: 1px solid #444;
             border-radius: 4px;
@@ -52,12 +67,12 @@
             font-size: 16px;
         }
         button {
-            background: #50fa7b;
-            color: #282a36;
+            background: #ea2abb;
+            color: #d4eb2a;
             border: none;
             border-radius: 4px;
             padding: 8px 16px;
-            font-size: 16px;
+            font-size: 20px;
             cursor: pointer;
             font-weight: bold;
             margin-top: 12px;
@@ -70,16 +85,16 @@
 <body>
     <div class="title">
         ╔════════════════════════════════════════════╗<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;CALCULATOR<br>
+        ║&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CALCULATOR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;║<br>
         ╚════════════════════════════════════════════╝
-    </div>
+    </div><br>
     <div class="note">
         Note:<br>
         1. Do not put any operators in your numbers.<br>
-        2. <span style="color:#bd93f9; font-weight:bold;">Operator: + for add, - for subtract, * for multiply, / for divide, ^ for power</span><br>
+        2. Operator: + for add, - for subtract, * for multiply, / for divide, ^ for power<br>
         3. Leave the 2nd operator and number blank for two-number operations.<br><br>
     </div>
-    <form id="calcForm" autocomplete="off" onsubmit="return calculate();">
+    <form class="form" id="calcForm" autocomplete="off" onsubmit="return calculate();">
         <label class="input-label">Enter first number:</label>
         <input type="text" class="calc-input" id="num1"><br><br>
 
@@ -89,17 +104,17 @@
         <label class="input-label">Enter second number:</label>
         <input type="text" class="calc-input" id="num2"><br><br>
 
-        <label class="input-label">Enter operator (optional):</label>
+        <label class="input-label">Enter operator:</label>
         <input type="text" class="calc-input" id="op2" maxlength="1"><br><br>
 
-        <label class="input-label">Enter third number (optional):</label>
+        <label class="input-label">Enter third number:</label>
         <input type="text" class="calc-input" id="num3"><br><br>
 
         <button type="submit">Calculate</button>
+        <span class="result" id="result"></span>
+        <span class="error" id="error"></span>
     </form>
-    <div class="divider">────────────────────────────────────────────────────────────</div>
-    <span class="result" id="result"></span>
-    <span class="error" id="error"></span>
+
 
     <script>
         function calculate() {
